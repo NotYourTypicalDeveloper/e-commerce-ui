@@ -7,7 +7,7 @@ import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 const ProductCard = ({ product }: { product: ProductType }) => {
-  const [productTypes, setProductTypes] = useState({
+  const [currProduct, setCurrProduct] = useState({
     size: product.sizes[0],
     color: product.colors[0],
   });
@@ -19,7 +19,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     type: "size" | "color";
     value: string;
   }) => {
-    setProductTypes((prev) => ({ ...prev, [type]: value }));
+    setCurrProduct((prev) => ({ ...prev, [type]: value }));
   };
 
   return (
@@ -28,7 +28,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[2/3]">
           <Image
-            src={product.images[product.colors[0]]}
+            src={product.images[currProduct.color]}
             alt={product.name}
             fill
             className="object-cover hover:scale:105 transition-all duration-300"
@@ -69,7 +69,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
               {product.colors.map((color) => (
                 <div
                   className={`cursor-pointer border-1 ${
-                    productTypes.color === color
+                    currProduct.color === color
                       ? "border-gray-400"
                       : "border-gray-200"
                   } rounded-full p-[1.2]`}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { Home } from "lucide-react";
 import { Bell } from "lucide-react";
-import { ShoppingCart } from "lucide-react";
+import CustomShoppingCartIcon from "./CustomShoppingCartIcon";
 
 const Navbar = () => {
   const navbar_icon_style = "w-4 h-4 text-gray-600";
@@ -31,7 +31,7 @@ const Navbar = () => {
           <Home className={navbar_icon_style} />
         </Link>
         <Bell className={navbar_icon_style} />
-        <ShoppingCart className={navbar_icon_style} />
+        <CustomShoppingCartIcon />
         <Link href="/login">Sign in</Link>
       </div>
     </nav>

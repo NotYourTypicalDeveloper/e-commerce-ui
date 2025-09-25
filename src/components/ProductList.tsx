@@ -1,8 +1,16 @@
 import { ProductsType } from "@/types";
 import Categories from "./Categories";
 import ProductCard from "./ProductCard";
+import Link from "next/link";
+import Filter from "./Filter";
 
-const ProductList = () => {
+const ProductList = ({
+  category,
+  params,
+}: {
+  category: string;
+  params: "homepage" | "products";
+}) => {
   const products: ProductsType = [
     {
       id: 1,
@@ -117,11 +125,18 @@ const ProductList = () => {
     <div className="w-full">
       <Categories />
 
+      {params === "products" && <Filter />}
       <div className="grid grid-cols-1 sm:cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+      <Link
+        href={category ? `/products/?category=${category}}` : "/products"}
+        className="flex justify-end mt-4 underline text-sm text-gray"
+      >
+        View all products
+      </Link>
     </div>
   );
 };
