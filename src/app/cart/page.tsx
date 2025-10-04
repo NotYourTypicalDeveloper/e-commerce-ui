@@ -1,7 +1,12 @@
 "use client";
 
+import PaymentForm from "@/components/PaymentForm";
+import ShippingForm from "@/components/ShippingForm";
+import SingleCartItem from "@/components/SingleCartItem";
 import { CartItemsType } from "@/types";
+import { ArrowRight } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const steps = [
   { id: 1, title: "Shopping Cart" },
@@ -69,19 +74,21 @@ const cartItems: CartItemsType = [
 const CartPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const activeStep = parseInt(searchParams.get("step") ?? "1");
+  const [shippingForm, setShippingForm] = useState(null);
+
+  const activeStep = parseInt(searchParams.get("step") || "1");
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center mt-12">
       {/* TITLE */}
       <h1 className="text-2xl font-medium">Your Shopping Cart</h1>
-      {/* STEPS */}
+      {/* STEPS*/}
       <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
         {steps.map((step) => (
           <div
             key={step.id}
             className={`flex items-center gap-2 border-b-2 pb-4 ${
-              step.id === activeStep ? "border-gray-800" : "border-gray=200"
+              step.id === activeStep ? "border-gray-800" : "border-gray-200"
             }`}
           >
             <div
@@ -91,9 +98,81 @@ const CartPage = () => {
             >
               {step.id}
             </div>
-            <h2>{step.title}</h2>
+            <h3
+              className={`text-sm ${
+                step.id === activeStep ? "text-gray-800" : "text-gray-400"
+              }`}
+            >
+              {step.title}
+            </h3>
           </div>
         ))}
+      </div>
+
+      {/* CURRENT STEP details */}
+      <div className="w-full flex flex-col lg:flex-row gap-16">
+        {/* Right side block */}
+        <div className="w-full lg:w-7/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
+          {activeStep === 1 ? (
+            cartItems.map((item) => (
+              <SingleCartItem key={item.id} item={item} />
+            ))
+          ) : activeStep === 2 ? (
+            <ShippingForm setShippingForm={setShippingForm} />
+          ) : activeStep === 3 && shippingForm ? (
+            <PaymentForm />
+          ) : (
+            <p className="text-sm text-red-600">
+              {" "}
+              Please fill out the shipping form
+            </p>
+          )}
+        </div>
+
+        {/* CART DETAILS left side block */}
+        <div className="w-full lg:w-5/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8 h-max">
+          <h2 className="font-semibold">Cart details</h2>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between text-sm">
+              <p className="text-sm text-gray-500">Subtotal</p>
+              <p className="font-medium">
+                $
+                {cartItems
+                  .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                  .toFixed(2)}
+              </p>
+            </div>
+            <div className="flex justify-between text-sm">
+              <p className="text-sm text-gray-500">Discount (10%)</p>
+              <p className="font-medium">-$10</p>
+            </div>
+            <div className="flex justify-between text-sm">
+              <p className="text-sm text-gray-500">Shipping fee</p>
+              <p className="font-medium">$10</p>
+            </div>
+            <hr className="border-gray-200" />
+            <div className="flex justify-between">
+              <p className="text-sm text-gray-500">Total</p>
+              <p className="font-medium">
+                $
+                {cartItems
+                  .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                  .toFixed(2)}
+              </p>
+            </div>
+          </div>
+
+          {/* CONTINUE button  */}
+          {activeStep === 1 && (
+            <button
+              onClick={() => router.push("/cart?step=2")}
+              className="w-full bg-gray-800 hover:bg-gray-900 transition-all text-white p-2 rounded-lg cursor-pointer flex justify-center items-center gap-2"
+            >
+              Continue <ArrowRight className="w-3 h-3" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
