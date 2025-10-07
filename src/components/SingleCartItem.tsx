@@ -1,8 +1,11 @@
+import useCartStore from "@/stores/cartStore";
 import { CartItemType } from "@/types";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 
 const SingleCartItem = ({ item }: { item: CartItemType }) => {
+  const { removeFromCart } = useCartStore();
+
   const line_style = "text-xs text-gray-500";
 
   return (
@@ -30,7 +33,10 @@ const SingleCartItem = ({ item }: { item: CartItemType }) => {
         </div>
       </div>
       {/* DELETE button */}
-      <button className="w-8 h-8 rounded-full bg-red-100 text-red-400 hover:bg-red-200 transition-all duration-300 flex items-center justify-center cursor-pointer">
+      <button
+        onClick={() => removeFromCart(item)}
+        className="w-8 h-8 rounded-full bg-red-100 text-red-400 hover:bg-red-200 transition-all duration-300 flex items-center justify-center cursor-pointer"
+      >
         <Trash2 className="w-3 h-3" />
       </button>
     </div>
