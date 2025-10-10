@@ -20,16 +20,19 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
             const updatedCart = [...state.cart];
             updatedCart[existingIndex].quantity += product.quantity || 1;
             return { cart: updatedCart };
-          } else {
-            return {
-              cart: [
-                ...state.cart,
-                {
-                  ...product,
-                },
-              ],
-            };
           }
+
+          return {
+            cart: [
+              ...state.cart,
+              {
+                ...product,
+                quantity: product.quantity || 1,
+                selectedSize: product.selectedSize,
+                selectedColor: product.selectedColor,
+              },
+            ],
+          };
         }),
       removeFromCart: (product) =>
         set((state) => ({
